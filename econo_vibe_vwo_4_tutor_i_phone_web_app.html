@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>EconoVibe – VWO4 Tutor</title>
+  <meta name="theme-color" content="#0e1116" />
+  <style>
+    :root{
+      --bg:#0e1116;--panel:#151a22;--panel-2:#11151c;--text:#e7eef7;--muted:#a9b7c6;--brand:#7bd88f;--brand-2:#81a1ff;--accent:#ffd166;--danger:#ff6b6b;
+      --ring:0 0 0 2px rgba(129,161,255,.35);--shadow:0 6px 20px rgba(0,0,0,.35)
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,#0c1016, #0e1116 40%, #0b0f14);color:var(--text);font:500 16px/1.35 system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"}
+    .app{display:flex;flex-direction:column;min-height:100%}
+    header{position:sticky;top:0;z-index:10;backdrop-filter:saturate(160%) blur(8px);background:rgba(14,17,22,.75);border-bottom:1px solid rgba(129,161,255,.15)}
+    .wrap{max-width:980px;margin:0 auto;padding:12px 16px}
+    .row{display:flex;gap:12px;align-items:center;justify-content:space-between}
+    .brand{display:flex;gap:10px;align-items:center}
+    .logo{width:30px;height:30px;border-radius:9px;background:radial-gradient(circle at 30% 30%, var(--brand), transparent 50%),radial-gradient(circle at 70% 70%, var(--brand-2), transparent 50%),linear-gradient(135deg,#212a36,#121720);box-shadow:var(--shadow)}
+    .title{font-weight:800;letter-spacing:.2px}
+    .pill{padding:6px 10px;border:1px solid rgba(129,161,255,.25);border-radius:100px;color:var(--muted);font-size:12px}
+    .content{flex:1;display:grid;grid-template-columns:1fr;gap:12px;padding:14px}
+    @media(min-width:900px){.content{grid-template-columns:300px 1fr}}
+    .card{background:linear-gradient(180deg,var(--panel),var(--panel-2));border:1px solid rgba(129,161,255,.1);border-radius:16px;box-shadow:var(--shadow)}
+    .card>.hd{padding:12px 14px;border-bottom:1px solid rgba(129,161,255,.08);font-weight:700;letter-spacing:.25px}
+    .card>.bd{padding:12px 14px}
+    .topics{display:flex;flex-direction:column;gap:10px}
+    .topic{display:flex;align-items:center;gap:10px;padding:10px;border-radius:12px;border:1px solid rgba(129,161,255,.12);background:rgba(21,26,34,.6);cursor:pointer}
+    .topic:hover{outline:var(--ring)}
+    .topic.active{border-color:var(--brand-2);box-shadow:0 0 0 2px rgba(129,161,255,.2) inset}
+    .topic .badge{margin-left:auto;font-size:11px;padding:4px 8px;border-radius:999px;background:rgba(129,161,255,.12);color:var(--muted)}
+    .progress{height:8px;background:#0b0f14;border-radius:999px;border:1px solid rgba(129,161,255,.12);overflow:hidden}
+    .progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--brand-2),var(--brand));width:0%}
+    .tabs{display:flex;gap:8px;margin-bottom:10px}
+    .tab{flex:1;text-align:center;padding:10px 12px;border-radius:12px;background:#0f131a;border:1px solid rgba(129,161,255,.12);cursor:pointer}
+    .tab.active{background:linear-gradient(180deg,#1a2130,#121720);border-color:rgba(129,161,255,.35)}
+    .muted{color:var(--muted)}
+    .hint{background:#0f141b;border:1px dashed rgba(129,161,255,.35);padding:10px;border-radius:12px}
+    .btn{appearance:none;border:none;background:linear-gradient(180deg,#1a2130,#121720);color:var(--text);padding:10px 12px;border-radius:12px;border:1px solid rgba(129,161,255,.25);cursor:pointer}
+    .btn:focus{outline:var(--ring)}
+    .btn[disabled]{opacity:.6;cursor:not-allowed}
+    .btn.brand{background:linear-gradient(90deg,var(--brand-2),var(--brand));color:#0b0f14;font-weight:800;border-color:transparent}
+    .grid{display:grid;gap:10px}
+    .grid.two{grid-template-columns:1fr 1fr}
+    .kpi{display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:12px;border:1px solid rgba(129,161,255,.15);background:rgba(21,26,34,.5)}
+    .kpi h3{margin:0;font-size:12px;color:var(--muted);font-weight:600}
+    .kpi b{font-size:18px}
+    .list{margin:0;padding-left:18px}
+    .list li{margin:6px 0}
+    input[type="text"], input[type="number"], select{width:100%;padding:10px;border-radius:12px;background:#0f141b;border:1px solid rgba(129,161,255,.25);color:var(--text)}
+    .option{display:flex;gap:10px;align-items:flex-start;padding:10px;border-radius:12px;border:1px solid rgba(129,161,255,.15);background:rgba(21,26,34,.6)}
+    .option input{margin-top:4px}
+    .correct{border-color:rgba(123,216,143,.7);background:rgba(123,216,143,.08)}
+    .wrong{border-color:rgba(255,107,107,.7);background:rgba(255,107,107,.08)}
+    .tag{font-size:11px;padding:4px 8px;border-radius:999px;background:rgba(123,216,143,.15);border:1px solid rgba(123,216,143,.35)}
+    .footer{padding:16px;text-align:center;color:var(--muted);font-size:12px}
+    .badge-earned{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:12px;border:1px solid rgba(129,161,255,.25);background:rgba(21,26,34,.6)}
+  </style>
+</head>
+<body>
+<div class="app" id="app">
+  <header>
+    <div class="wrap row">
+      <div class="brand"><div class="logo"></div><div>
+        <div class="title">EconoVibe</div>
+        <div class="muted" style="font-size:12px">VWO4 Economie • Tutor & Oefenen</div>
+      </div></div>
+      <div class="pill" id="streak">🔥 0 dagen streak</div>
+    </div>
+  </header>
+
+  <div class="content wrap">
+    <section class="card" style="height:max-content">
+      <div class="hd">Onderwerpen</div>
+      <div class="bd">
+        <div class="progress" title="Mastery voortgang"><i id="progressBar"></i></div>
+        <div class="topics" id="topics"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="hd" id="topicTitle">Kies een onderwerp</div>
+      <div class="bd">
+        <div class="tabs">
+          <button class="tab active" data-tab="study">📘 Leren</button>
+          <button class="tab" data-tab="practice">🧠 Oefenen</button>
+          <button class="tab" data-tab="flash">🪄 Flashcards</button>
+        </div>
+        <div id="studyTab"></div>
+        <div id="practiceTab" style="display:none"></div>
+        <div id="flashTab" style="display:none"></div>
+      </div>
+    </section>
+
+    <section class="card" style="height:max-content">
+      <div class="hd">Jouw voortgang</div>
+      <div class="bd grid two">
+        <div class="kpi"><h3>Behaalde vragen</h3><b id="kpiCorrect">0</b></div>
+        <div class="kpi"><h3>Accuracy</h3><b id="kpiAccuracy">0%</b></div>
+        <div class="kpi"><h3>Badges</h3><div id="badges"></div></div>
+        <div class="kpi"><h3>Tip</h3><span class="muted" id="coachTip">Kies een onderwerp en start met 5 oefenvragen.</span></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="footer">Gemaakt voor iPhone (browser-based). Werkt offline na laden. 🟢</div>
+</div>
+
+<script>
+  // --- Data --------------------------------------------------------------
+  const TOPICS = [
+    {
+      id: 'vraag-aanbod',
+      name: 'Vraag & Aanbod',
+      goals: ['Begrijp verschuiving vs. langs de curve', 'Bereken marktevenwicht', 'Interpreteer grafieken'],
+      theory: [
+        'De vraagcurve daalt (hogere prijs → lagere gevraagde hoeveelheid).',
+        'De aanbodcurve stijgt (hogere prijs → grotere aangeboden hoeveelheid).',
+        'Verschuiving = verandering in andere factoren (inkomen, voorkeuren, technologie), niet door de prijs zelf.',
+      ],
+      examples: [
+        'Vraag: Qv = 100 - 2P, Aanbod: Qa = -20 + 3P → Evenwicht: 100 - 2P = -20 + 3P ⇒ 5P = 120 ⇒ P = 24, Q = 52.',
+      ],
+      questions: [
+        {type:'mc', q:'Wat veroorzaakt een verschuiving van de vraagcurve?',
+          options:['Een prijsstijging van het goed','Een verandering in inkomen','Een punt kiezen op dezelfde curve','Meetfout in de grafiek'],
+          a:1, exp:'Inkomen is een vraagfactor. Een verandering daarin verschuift de hele curve.'},
+        {type:'num', q:'Los op: Qv=80-2P en Qa= -10+2P. Wat is P*? (geheel getal)', a:22.5, tol:0.5,
+          exp:'80-2P = -10+2P ⇒ 4P = 90 ⇒ P = 22,5.'},
+        {type:'mc', q:'Als technologie verbetert, wat gebeurt er met aanbod?', options:['Aanbod naar links','Aanbod naar rechts','Vraag naar links','Prijs omhoog, hoeveelheid omlaag'], a:1, exp:'Technologie verlaagt kosten → aanbod neemt toe → curve naar rechts.'},
+        {type:'num', q:'Bij P=20 is Qv=100-2P en Qa=-20+3P. Wat is het overschot/tekort (Qv-Qa)?', a: (100-40)-(-20+60), tol:0.1, exp:'Qv=60, Qa=40 → Tekort aan aanbod? Nee, Qa < Qv dus vraagoverschot van 20.'},
+        {type:'mc', q:'Een beweging langs de vraagcurve wordt veroorzaakt door…', options:['Inkomen','Prijs van het goed zelf','Technologie','Weer'], a:1, exp:'Prijsverandering van het goed zelf → langs de curve.'}
+      ],
+      flash: [
+        ['Vraagcurve','Relatie tussen prijs en gevraagde hoeveelheid (dalend).'],
+        ['Aanbodcurve','Relatie tussen prijs en aangeboden hoeveelheid (stijgend).'],
+        ['Evenwichtsprijs','Prijs waarbij Qv = Qa.'],
+      ]
+    },
+    {
+      id: 'elasticiteit',
+      name: 'Prijselasticiteit',
+      goals: ['Definitie Ed', 'Interpretatie inelastisch/ elastisch', 'Berekening met midpoint-methode'],
+      theory: [
+        'Prijselasticiteit van de vraag (Ed) = %ΔQv / %ΔP (negatief teken vaak genegeerd in interpretatie).',
+        'Inelastisch: |Ed| < 1 (hoeveelheid reageert weinig); Elastisch: |Ed| > 1.',
+        'Midpoint: %ΔX = (X2 - X1) / ((X1 + X2)/2) × 100%.',
+      ],
+      examples: [
+        'Prijs stijgt van 10 naar 12; Qv daalt van 100 naar 80. %ΔP = 2/11=18,18%; %ΔQv = -20/90=-22,22%; Ed ≈ -1,22 (elastisch).',
+      ],
+      questions: [
+        {type:'mc', q:'|Ed| = 0,4 betekent…', options:['Elastisch','Unitair elastisch','Inelastisch','Perfect elastisch'], a:2, exp:'0,4 < 1 → inelastisch.'},
+        {type:'num', q:'Midpoint: P: 10→12, Q: 100→80. |Ed|≈?', a:1.22, tol:0.08, exp:'|Ed|≈1,22 (elastisch).'},
+        {type:'mc', q:'Welke markt is meestal inelastisch op korte termijn?', options:['Luxe horloges','Benzine','Vakanties','Designer kleding'], a:1, exp:'Benzine is op korte termijn moeilijk te vervangen → inelastisch.'},
+        {type:'num', q:'Als |Ed|=2 en prijs stijgt 5%, wat is de % daling in Qv (absolute waarde)?', a:10, tol:0.6, exp:'%ΔQv = |Ed|×%ΔP = 2×5% = 10%.'},
+        {type:'mc', q:'Bij inelastische vraag leidt prijsstijging tot…', options:['Lagere omzet','Hogere omzet','Zelfde omzet','Onbekend'], a:1, exp:'%P stijgt, Q daalt weinig → P×Q stijgt → hogere omzet.'}
+      ],
+      flash: [
+        ['Inelastisch','|Ed| < 1'],['Elastisch','|Ed| > 1'],['Unitair','|Ed| = 1']
+      ]
+    },
+    {
+      id: 'indexcijfers',
+      name: 'Indexcijfers & procenten',
+      goals: ['Prijsindex','Procentuele verandering','Rekenen met basisjaar'],
+      theory: [
+        'Indexcijfer = (waarde in jaar t / waarde in basisjaar) × 100.',
+        'Procentuele verandering = (nieuw - oud) / oud × 100%.',
+        'Samengesteld: vermenigvuldig indexen (of tel procentuele veranderingen niet simpel op).',
+      ],
+      examples: [
+        'Prijs van 50 (basisjaar) naar 60 → index = 60/50×100 = 120. Verandering = +20%.',
+      ],
+      questions: [
+        {type:'num', q:'Basis 2015=100. In 2020 is prijs 15% hoger. Wat is de index in 2020?', a:115, tol:0.1, exp:'100×1,15 = 115.'},
+        {type:'num', q:'Van 80 naar 100: procentuele verandering = ?', a:25, tol:0.2, exp:'(100-80)/80×100 = 25%.'},
+        {type:'mc', q:'De CPI stijgt 3% en daarna 2%. Totale stijging ≈…', options:['5% exact','5,06%','6%','4%'], a:1, exp:'(1,03×1,02−1)=5,06%.'},
+        {type:'num', q:'Index 120 daalt daarna 10%. Nieuwe index ≈?', a:108, tol:0.2, exp:'120×0,9=108.'},
+        {type:'mc', q:'Wat is het basisjaar bij index 100?', options:['Het startjaar van de reeks','Altijd 2015','Altijd huidige jaar','Jaar met de laagste prijs'], a:0, exp:'Index 100 definieert het gekozen basisjaar.'}
+      ],
+      flash:[['Index 100','Waarde in basisjaar'],['%Δ','(nieuw-oud)/oud×100'],['CPI','Consumentenprijsindex']]
+    },
+    {
+      id: 'macro-basics',
+      name:'Macro: inflatie, werkloosheid, bbp',
+      goals:['Definities','Gevolgen','Basis verbanden'],
+      theory:[
+        'Inflatie = algemene stijging van het prijsniveau (CPI).',
+        'Werkloosheid = mensen zonder baan die beschikbaar zijn en zoeken.',
+        'BBP = totale waarde van alle finale goederen en diensten in een land in een jaar.',
+      ],
+      examples:['Als inflatie hoger is dan loonstijging → reëel loon daalt.'],
+      questions:[
+        {type:'mc', q:'Wat meet de CPI vooral?', options:['Productie','Prijsniveau voor consumenten','Investeringen','Export'], a:1, exp:'CPI ≈ consumentenprijsniveau.'},
+        {type:'mc', q:'Stijgende inflatie bij gelijk loon leidt tot…', options:['Hoger reëel loon','Lager reëel loon','Zelfde reëel loon','Meer banen automatisch'], a:1, exp:'Prijsniveau ↑, koopkracht ↓.'},
+        {type:'mc', q:'BBP telt NIET mee:', options:['Overheidsuitgaven','Netto-export','Tussenproducten','Consumptie'], a:2, exp:'Tussenproducten worden dubbel geteld → niet opnemen.'},
+        {type:'num', q:'Nominaal loon +3%, inflatie +5%. % verandering reëel loon ≈ ?', a:-1.9, tol:0.3, exp:'(1,03/1,05 − 1)≈ −1,9%.'},
+        {type:'mc', q:'Hoge werkloosheid betekent…', options:['Onderbenutting van arbeid','Hogere reële lonen','Direct hogere inflatie','Meer export'], a:0, exp:'Onderbenutting van productiefactoren.'}
+      ],
+      flash:[['Inflatie','Algemene prijsstijging'],['Reëel loon','Loon gecorrigeerd voor inflatie'],['BBP','Totale productie (finale goederen)']]
+    }
+  ];
+
+  // --- State & Storage --------------------------------------------------
+  const state = {
+    topicId:null, tab:'study', stats:{correct:0, total:0}, badges:[], streak:0, lastDay:null
+  };
+  const LS_KEY='econovibe_v1';
+  function loadState(){
+    try{const s=JSON.parse(localStorage.getItem(LS_KEY)); if(s){Object.assign(state,s);} }catch(e){}
+  }
+  function saveState(){localStorage.setItem(LS_KEY, JSON.stringify(state));}
+
+  // --- Utils ------------------------------------------------------------
+  const $ = sel => document.querySelector(sel);
+  function el(tag, attrs={}, ...children){const e=document.createElement(tag); Object.entries(attrs).forEach(([k,v])=>{
+    if(k==='class') e.className=v; else if(k==='html') e.innerHTML=v; else e.setAttribute(k,v);
+  }); children.forEach(c=> e.append(c.nodeType?c:document.createTextNode(c))); return e;}
+  function formatPct(n){return (Math.round(n*1000)/10).toFixed(1)+'%';}
+  function todayKey(){const d=new Date(); return d.toISOString().slice(0,10);} // YYYY-MM-DD
+
+  // --- Streak -----------------------------------------------------------
+  function updateStreak(){
+    const today=todayKey();
+    if(!state.lastDay){state.streak=1; state.lastDay=today;}
+    else if(state.lastDay!==today){
+      const prev=new Date(state.lastDay), now=new Date(today);
+      const diff=(now - prev)/(1000*60*60*24);
+      state.streak = (diff===1)? (state.streak+1) : 1;
+      state.lastDay=today;
+    }
+    $('#streak').textContent = `🔥 ${state.streak} dagen streak`;
+  }
+
+  // --- Render Topics ----------------------------------------------------
+  function mastery(){ return state.stats.total? state.stats.correct/state.stats.total : 0; }
+  function renderTopics(){
+    const box=$('#topics'); box.innerHTML='';
+    TOPICS.forEach(t=>{
+      const isActive = state.topicId===t.id;
+      const li=el('div', {class:`topic ${isActive?'active':''}`});
+      li.append(el('div', {class:'tag'}, 'VWO4'));
+      li.append(el('div', {}, t.name));
+      li.append(el('span', {class:'badge'}, `${t.goals.length} leerdoelen`));
+      li.addEventListener('click', ()=>{state.topicId=t.id; saveState(); selectTab(state.tab); renderMain();});
+      box.append(li);
+    });
+    $('#progressBar').style.width = (mastery()*100).toFixed(0)+'%';
+  }
+
+  // --- Tabs -------------------------------------------------------------
+  function bindTabs(){
+    document.querySelectorAll('.tab').forEach(btn=>{
+      btn.addEventListener('click', ()=>{ selectTab(btn.dataset.tab); });
+    });
+  }
+  function selectTab(tab){
+    state.tab=tab; saveState();
+    document.querySelectorAll('.tab').forEach(b=> b.classList.toggle('active', b.dataset.tab===tab));
+    $('#studyTab').style.display = tab==='study'? 'block':'none';
+    $('#practiceTab').style.display = tab==='practice'? 'block':'none';
+    $('#flashTab').style.display = tab==='flash'? 'block':'none';
+  }
+
+  // --- Study View -------------------------------------------------------
+  function renderStudy(t){
+    const box=$('#studyTab'); box.innerHTML='';
+    box.append(el('div',{class:'muted'}, 'Korte uitleg + voorbeelden'));
+    const ul=el('ul',{class:'list'}); t.theory.forEach(s=> ul.append(el('li',{},s))); box.append(ul);
+    box.append(el('div',{class:'hint', style:'margin-top:10px'}, 'Voorbeeld:')); t.examples.forEach(x=> box.append(el('div',{class:'hint', style:'margin-top:8px'}, x)));
+    const goals=el('div',{class:'grid two', style:'margin-top:10px'});
+    t.goals.forEach(g=> goals.append(el('div',{class:'kpi'}, el('h3',{},'Leerdoel'), el('b',{},g))));
+    box.append(goals);
+    const start=el('div',{style:'margin-top:12px;display:flex;gap:8px'},
+      el('button',{class:'btn brand'},'Start 5 oefeningen'));
+    start.firstChild.addEventListener('click', ()=> startPractice(t,5));
+    box.append(start);
+  }
+
+  // --- Practice View ----------------------------------------------------
+  let currentQ=null, currentIdx=-1, currentSet=[];
+  function startPractice(t, n=5){
+    currentSet = shuffle(t.questions).slice(0, n);
+    currentIdx = -1; currentQ=null;
+    $('#practiceTab').innerHTML='';
+    nextQuestion(); selectTab('practice');
+  }
+  function shuffle(a){return a.map(x=>[Math.random(),x]).sort((x,y)=>x[0]-y[0]).map(x=>x[1]);}
+  function nextQuestion(){
+    currentIdx++;
+    const box=$('#practiceTab');
+    if(currentIdx>=currentSet.length){
+      box.innerHTML='';
+      box.append(el('div',{class:'kpi'}, el('h3',{},'Set afgerond'), el('b',{},`Score: ${state.stats.correct}/${state.stats.total} totaal`)));
+      coach('Mooi! Probeer nu flashcards of kies een nieuw onderwerp.');
+      maybeBadge(); renderTopics(); renderKPIs(); saveState();
+      return;
+    }
+    currentQ=currentSet[currentIdx];
+    box.innerHTML='';
+    box.append(el('div',{class:'muted'},`Vraag ${currentIdx+1} van ${currentSet.length}`));
+    box.append(el('h2',{}, currentQ.q));
+
+    if(currentQ.type==='mc'){
+      currentQ.options.forEach((opt,i)=>{
+        const op=el('label',{class:'option'});
+        const radio=el('input',{type:'radio',name:'mc'});
+        op.append(radio, el('div',{},opt));
+        op.addEventListener('click',()=>{radio.checked=true;});
+        box.append(op);
+      });
+      const actions=el('div',{style:'display:flex;gap:8px;margin-top:10px'});
+      const btn=el('button',{class:'btn brand'},'Check');
+      const hint=el('button',{class:'btn'},'Hint');
+      actions.append(btn,hint); box.append(actions);
+      let hintShown=false;
+      hint.addEventListener('click',()=>{
+        if(hintShown) return; hintShown=true;
+        box.append(el('div',{class:'hint',style:'margin-top:8px'}, suggestHint(currentQ)));
+      });
+      btn.addEventListener('click',()=>{
+        const radios=[...document.querySelectorAll('input[name="mc"]')];
+        const idx=radios.findIndex(r=>r.checked);
+        if(idx<0) return;
+        state.stats.total++;
+        const opts=[...document.querySelectorAll('.option')];
+        opts.forEach((o,i)=> o.classList.toggle('correct', i===currentQ.a));
+        if(idx===currentQ.a){ state.stats.correct++; coach('Top! Leg in je eigen woorden uit waarom het klopt.'); }
+        else { opts[idx].classList.add('wrong'); coach('Kijk nog eens naar de definitie.'); }
+        box.append(el('div',{class:'hint',style:'margin-top:8px'}, 'Uitleg: '+currentQ.exp));
+        const nxt=el('button',{class:'btn',style:'margin-top:10px'},'Volgende'); nxt.addEventListener('click', nextQuestion); box.append(nxt);
+        renderKPIs(); saveState();
+      });
+    }
+    else if(currentQ.type==='num'){
+      const input=el('input',{type:'number', step:'any', placeholder:'Jouw antwoord…'});
+      const actions=el('div',{style:'display:flex;gap:8px;margin-top:10px'});
+      const btn=el('button',{class:'btn brand'},'Check');
+      const hint=el('button',{class:'btn'},'Hint');
+      actions.append(input,btn,hint); box.append(actions);
+      let hintShown=false;
+      hint.addEventListener('click',()=>{ if(hintShown) return; hintShown=true; box.append(el('div',{class:'hint',style:'margin-top:8px'}, suggestHint(currentQ))); });
+      btn.addEventListener('click',()=>{
+        const val=parseFloat(input.value);
+        if(Number.isNaN(val)) return;
+        state.stats.total++;
+        const ok = Math.abs(val - currentQ.a) <= (currentQ.tol??0.01);
+        if(ok){ state.stats.correct++; input.classList.add('correct'); coach('Lekker! Kan je de tussenstappen noteren?'); }
+        else { input.classList.add('wrong'); coach('Check je formule en units.'); }
+        box.append(el('div',{class:'hint',style:'margin-top:8px'}, 'Uitleg: '+currentQ.exp));
+        const nxt=el('button',{class:'btn',style:'margin-top:10px'},'Volgende'); nxt.addEventListener('click', nextQuestion); box.append(nxt);
+        renderKPIs(); saveState();
+      });
+    }
+  }
+
+  function suggestHint(q){
+    if(q.type==='mc'){
+      if(q.q.toLowerCase().includes('verschuiving')) return 'Denk aan factoren buiten de prijs van het goed zelf (inkomen/voorkeuren).';
+      if(q.q.toLowerCase().includes('inelastisch')) return 'Kijk naar |Ed| ten opzichte van 1.';
+      return 'Elimineer 2 foute opties en kies daarna uit de overgebleven 2.';
+    } else {
+      if(q.q.includes('Qv=') && q.q.includes('Qa=')) return 'Zet Qv gelijk aan Qa en los P op.';
+      if(q.q.toLowerCase().includes('midpoint')) return 'Gebruik (X2−X1)/((X1+X2)/2). Doe dit voor P en Q.';
+      if(q.q.toLowerCase().includes('index')) return 'Index = (waarde t / basis) × 100. Procent = (nieuw−oud)/oud × 100.';
+      return 'Schrijf formule op en vul rustig in. Rond pas op het einde af.';
+    }
+  }
+
+  // --- Flashcards -------------------------------------------------------
+  let flashIdx=0; let flashDeck=[];
+  function renderFlash(t){
+    const box=$('#flashTab'); box.innerHTML='';
+    flashDeck = shuffle(t.flash);
+    flashIdx=0; draw();
+    function draw(){
+      if(!flashDeck.length){ box.append(el('div',{class:'muted'},'Geen flashcards.')); return; }
+      box.innerHTML='';
+      const [front,back] = flashDeck[flashIdx];
+      const card=el('div',{class:'hint',style:'padding:18px;min-height:110px;display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer'}, front);
+      let flipped=false;
+      card.addEventListener('click',()=>{ flipped=!flipped; card.textContent = flipped? back : front;});
+      const nav=el('div',{style:'display:flex;gap:8px;margin-top:10px;justify-content:space-between'},
+        el('button',{class:'btn'},'← Vorige'),
+        el('div',{class:'muted'},`${flashIdx+1}/${flashDeck.length}`),
+        el('button',{class:'btn'},'Volgende →')
+      );
+      nav.firstChild.addEventListener('click',()=>{ flashIdx=(flashIdx-1+flashDeck.length)%flashDeck.length; draw();});
+      nav.lastChild.addEventListener('click',()=>{ flashIdx=(flashIdx+1)%flashDeck.length; draw();});
+      box.append(card, nav);
+    }
+  }
+
+  // --- Coach & Badges ---------------------------------------------------
+  function coach(msg){
+    $('#coachTip').textContent = msg;
+  }
+  function renderKPIs(){
+    $('#kpiCorrect').textContent = state.stats.correct;
+    const acc = state.stats.total? (state.stats.correct/state.stats.total)*100 : 0;
+    $('#kpiAccuracy').textContent = Math.round(acc)+'%';
+  }
+  function maybeBadge(){
+    const acc = state.stats.total? (state.stats.correct/state.stats.total)*100 : 0;
+    if(state.stats.correct>=10 && !state.badges.includes('Starter')) state.badges.push('Starter');
+    if(acc>=80 && state.stats.total>=15 && !state.badges.includes('Sharp Shooter')) state.badges.push('Sharp Shooter');
+    renderBadges(); saveState();
+  }
+  function renderBadges(){
+    const b=$('#badges'); b.innerHTML='';
+    if(!state.badges.length){b.textContent='Nog geen badges.'; return;}
+    state.badges.forEach(x=> b.append(el('div',{class:'badge-earned'},'🏅 ', x)));
+  }
+
+  // --- Main Render ------------------------------------------------------
+  function renderMain(){
+    renderTopics(); renderKPIs(); renderBadges(); updateStreak();
+    const t=TOPICS.find(x=>x.id===state.topicId);
+    $('#topicTitle').textContent = t? t.name : 'Kies een onderwerp';
+    if(!t){ $('#studyTab').innerHTML='<div class="muted">Selecteer links een onderwerp om te starten.</div>'; $('#practiceTab').innerHTML=''; $('#flashTab').innerHTML=''; return; }
+    renderStudy(t); renderFlash(t);
+  }
+
+  // --- Init -------------------------------------------------------------
+  loadState(); bindTabs(); selectTab(state.tab); renderMain();
+</script>
+</body>
+</html>
